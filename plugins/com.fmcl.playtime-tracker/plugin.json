@@ -1,0 +1,22 @@
+{
+  "id": "com.fmcl.playtime-tracker",
+  "name": "游戏时长统计",
+  "version": "1.0.0",
+  "author": "FMCL Team",
+  "min_fmcl_version": "2.10.4",
+  "description": {
+    "zh_CN": "记录每个 Minecraft 版本的游戏时长，支持按日和按版本查看历史统计。游戏停止时显示本次游戏时长通知，数据存储在插件隔离目录中。",
+    "en_US": "Track playtime for each Minecraft version with daily and per-version statistics. Shows session duration notification on game stop. Data stored in isolated plugin directory."
+  },
+  "permissions": [
+    "filesystem.write",
+    "core.launch_hook",
+    "ui.notification",
+    "data.store"
+  ],
+  "dependencies": {},
+  "tags": ["utility", "gameplay"],
+  "homepage": "https://github.com/Janson20/FMCL-Plugins",
+  "license": "MIT",
+  "entry": "__init__"
+}

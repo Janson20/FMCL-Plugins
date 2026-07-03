@@ -1,0 +1,156 @@
+{
+  "meta": {
+    "name": "FMCL Plugins Index",
+    "version": "1.0",
+    "schema_version": 1,
+    "generated_at": "2026-07-03T12:08:44Z",
+    "repo": "Janson20/FMCL-Plugins",
+    "base_url": "https://github.com/Janson20/FMCL-Plugins"
+  },
+  "categories": {
+    "utility": "实用工具",
+    "ui": "UI 扩展",
+    "gameplay": "游戏体验",
+    "server": "服务器相关",
+    "modpack": "整合包相关",
+    "performance": "性能优化",
+    "backup": "备份还原",
+    "theme": "主题美化",
+    "automation": "自动化",
+    "integration": "第三方集成"
+  },
+  "stats": {
+    "total_plugins": 4,
+    "last_updated": "2026-07-03T12:08:44Z"
+  },
+  "plugins": [
+    {
+      "id": "com.fmcl.fabric-api-installer",
+      "name": "Fabric API 自动安装器",
+      "version": "1.0.0",
+      "author": "FMCL Team",
+      "min_fmcl_version": "2.10.4",
+      "max_fmcl_version": null,
+      "description": {
+        "zh_CN": "确保每个 Fabric 版本都有 Fabric API 模组。在检测到 Fabric 版本缺失 Fabric API 时自动从 Modrinth 下载安装，同时可选安装 Mod Menu 和 Sodium 等常用前置模组。",
+        "en_US": "Ensure every Fabric version has Fabric API installed. Auto-downloads Fabric API from Modrinth when missing, with optional install of common companion mods like Mod Menu and Sodium."
+      },
+      "permissions": [
+        "network.http",
+        "filesystem.write",
+        "filesystem.read",
+        "core.launch_hook",
+        "ui.notification",
+        "data.store"
+      ],
+      "dependencies": {},
+      "tags": [
+        "modpack",
+        "automation",
+        "utility"
+      ],
+      "homepage": "https://github.com/Janson20/FMCL-Plugins",
+      "license": "MIT",
+      "icon": "",
+      "download": {
+        "repo": "Janson20/FMCL-Plugins",
+        "tag_prefix": "com.fmcl.fabric-api-installer/v",
+        "filename": "com.fmcl.fabric-api-installer.fmpl"
+      }
+    },
+    {
+      "id": "com.fmcl.theme-scheduler",
+      "name": "主题调度器",
+      "version": "1.0.0",
+      "author": "FMCL Team",
+      "min_fmcl_version": "2.10.4",
+      "max_fmcl_version": null,
+      "description": {
+        "zh_CN": "根据系统时间自动切换日/夜主题。可自定义日间/夜间开始时间和各时段的强调色，保护视力，减少夜间屏幕眩光。",
+        "en_US": "Automatically switches between day/night themes based on system time. Customizable day/night start times and accent colors to reduce eye strain at night."
+      },
+      "permissions": [
+        "data.store",
+        "ui.notification",
+        "data.settings"
+      ],
+      "dependencies": {},
+      "tags": [
+        "theme",
+        "utility",
+        "automation"
+      ],
+      "homepage": "https://github.com/Janson20/FMCL-Plugins",
+      "license": "MIT",
+      "icon": "",
+      "download": {
+        "repo": "Janson20/FMCL-Plugins",
+        "tag_prefix": "com.fmcl.theme-scheduler/v",
+        "filename": "com.fmcl.theme-scheduler.fmpl"
+      }
+    },
+    {
+      "id": "com.fmcl.playtime-tracker",
+      "name": "游戏时长统计",
+      "version": "1.0.0",
+      "author": "FMCL Team",
+      "min_fmcl_version": "2.10.4",
+      "max_fmcl_version": null,
+      "description": {
+        "zh_CN": "记录每个 Minecraft 版本的游戏时长，支持按日和按版本查看历史统计。游戏停止时显示本次游戏时长通知，数据存储在插件隔离目录中。",
+        "en_US": "Track playtime for each Minecraft version with daily and per-version statistics. Shows session duration notification on game stop. Data stored in isolated plugin directory."
+      },
+      "permissions": [
+        "filesystem.write",
+        "core.launch_hook",
+        "ui.notification",
+        "data.store"
+      ],
+      "dependencies": {},
+      "tags": [
+        "utility",
+        "gameplay"
+      ],
+      "homepage": "https://github.com/Janson20/FMCL-Plugins",
+      "license": "MIT",
+      "icon": "",
+      "download": {
+        "repo": "Janson20/FMCL-Plugins",
+        "tag_prefix": "com.fmcl.playtime-tracker/v",
+        "filename": "com.fmcl.playtime-tracker.fmpl"
+      }
+    },
+    {
+      "id": "com.fmcl.auto-backup",
+      "name": "自动备份",
+      "version": "1.0.0",
+      "author": "FMCL Team",
+      "min_fmcl_version": "2.10.4",
+      "max_fmcl_version": null,
+      "description": {
+        "zh_CN": "游戏启动前自动备份所有存档，支持定时清理旧备份以节省磁盘空间。可配置备份压缩级别和最大保留数量。",
+        "en_US": "Auto-backup all world saves before game launch, with automatic cleanup of old backups to save disk space. Configurable compression level and max retention count."
+      },
+      "permissions": [
+        "filesystem.read",
+        "filesystem.write",
+        "core.launch_hook",
+        "ui.notification",
+        "data.store"
+      ],
+      "dependencies": {},
+      "tags": [
+        "backup",
+        "automation"
+      ],
+      "homepage": "https://github.com/Janson20/FMCL-Plugins",
+      "license": "MIT",
+      "icon": "",
+      "download": {
+        "repo": "Janson20/FMCL-Plugins",
+        "tag_prefix": "com.fmcl.auto-backup/v",
+        "filename": "com.fmcl.auto-backup.fmpl"
+      }
+    }
+  ]
+}

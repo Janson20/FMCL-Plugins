@@ -1,0 +1,9 @@
+{
+  "name": "FMCL-Plugins",
+  "description": "FMCL 官方插件市场仓库",
+  "authors": ["FMCL Team"],
+  "repository": "https://github.com/Janson20/FMCL-Plugins",
+  "homepage": "https://github.com/Janson20/FMCL-Plugins#readme",
+  "license": "MIT",
+  "keywords": ["fmcl", "minecraft", "launcher", "plugins"]
+}

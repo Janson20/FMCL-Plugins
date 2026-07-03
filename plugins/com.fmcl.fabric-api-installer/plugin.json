@@ -1,0 +1,24 @@
+{
+  "id": "com.fmcl.fabric-api-installer",
+  "name": "Fabric API 自动安装器",
+  "version": "1.0.0",
+  "author": "FMCL Team",
+  "min_fmcl_version": "2.10.4",
+  "description": {
+    "zh_CN": "确保每个 Fabric 版本都有 Fabric API 模组。在检测到 Fabric 版本缺失 Fabric API 时自动从 Modrinth 下载安装，同时可选安装 Mod Menu 和 Sodium 等常用前置模组。",
+    "en_US": "Ensure every Fabric version has Fabric API installed. Auto-downloads Fabric API from Modrinth when missing, with optional install of common companion mods like Mod Menu and Sodium."
+  },
+  "permissions": [
+    "network.http",
+    "filesystem.write",
+    "filesystem.read",
+    "core.launch_hook",
+    "ui.notification",
+    "data.store"
+  ],
+  "dependencies": {},
+  "tags": ["modpack", "automation", "utility"],
+  "homepage": "https://github.com/Janson20/FMCL-Plugins",
+  "license": "MIT",
+  "entry": "__init__"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "com.fmcl.auto-backup",
+  "name": "自动备份",
+  "version": "1.0.0",
+  "author": "FMCL Team",
+  "min_fmcl_version": "2.10.4",
+  "description": {
+    "zh_CN": "游戏启动前自动备份所有存档，支持定时清理旧备份以节省磁盘空间。可配置备份压缩级别和最大保留数量。",
+    "en_US": "Auto-backup all world saves before game launch, with automatic cleanup of old backups to save disk space. Configurable compression level and max retention count."
+  },
+  "permissions": [
+    "filesystem.read",
+    "filesystem.write",
+    "core.launch_hook",
+    "ui.notification",
+    "data.store"
+  ],
+  "dependencies": {},
+  "tags": ["backup", "automation"],
+  "homepage": "https://github.com/Janson20/FMCL-Plugins",
+  "license": "MIT",
+  "entry": "__init__"
+}

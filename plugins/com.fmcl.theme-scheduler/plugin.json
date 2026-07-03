@@ -1,0 +1,21 @@
+{
+  "id": "com.fmcl.theme-scheduler",
+  "name": "主题调度器",
+  "version": "1.0.0",
+  "author": "FMCL Team",
+  "min_fmcl_version": "2.10.4",
+  "description": {
+    "zh_CN": "根据系统时间自动切换日/夜主题。可自定义日间/夜间开始时间和各时段的强调色，保护视力，减少夜间屏幕眩光。",
+    "en_US": "Automatically switches between day/night themes based on system time. Customizable day/night start times and accent colors to reduce eye strain at night."
+  },
+  "permissions": [
+    "data.store",
+    "ui.notification",
+    "data.settings"
+  ],
+  "dependencies": {},
+  "tags": ["theme", "utility", "automation"],
+  "homepage": "https://github.com/Janson20/FMCL-Plugins",
+  "license": "MIT",
+  "entry": "__init__"
+}

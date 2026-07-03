@@ -1,0 +1,12 @@
+# 忽略 Python 缓存
+__pycache__/
+*.pyc
+
+# 忽略临时文件
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# 忽略本地测试产物
+*.fmpl
