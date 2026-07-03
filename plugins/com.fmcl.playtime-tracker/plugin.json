@@ -12,6 +12,7 @@
     "filesystem.write",
     "core.launch_hook",
     "ui.notification",
+    "ui.extend",
     "data.store"
   ],
   "dependencies": {},

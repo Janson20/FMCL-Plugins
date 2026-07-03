@@ -2,6 +2,7 @@
 
 import datetime
 import json
+import operator
 from typing import Dict, List, Optional, Any
 
 from plugin_manager.base import PluginBase, HookPoint
@@ -42,6 +43,14 @@ class PlaytimeTrackerPlugin(PluginBase):
             self.manifest.id,
             HookPoint.GAME_STOPPED,
             self._on_game_stopped,
+            priority=100,
+        )
+
+        # 注册 UI 标签页
+        self._manager.register_hook(
+            self.manifest.id,
+            HookPoint.UI_TAB_REGISTER,
+            self._on_register_tab,
             priority=100,
         )
 
@@ -168,3 +177,198 @@ class PlaytimeTrackerPlugin(PluginBase):
         if remain_min == 0:
             return f"{hours}小时"
         return f"{hours}小时{remain_min}分钟"
+
+    @staticmethod
+    def _format_duration_short(seconds: int) -> str:
+        if seconds < 60:
+            return f"{seconds}s"
+        minutes = seconds // 60
+        if minutes < 60:
+            return f"{minutes}m"
+        hours = minutes // 60
+        remain = minutes % 60
+        if remain == 0:
+            return f"{hours}h"
+        return f"{hours}h{remain}m"
+
+    # ── UI ──
+
+    def _on_register_tab(self, **kwargs):
+        """UI_TAB_REGISTER 钩子回调"""
+        return {
+            "id": "playtime_tracker_tab",
+            "text": "🎮 游戏时长",
+            "order": 90,
+        }
+
+    def get_tab_ui(self, parent):
+        """返回标签页 UI"""
+        try:
+            import customtkinter as ctk
+        except ImportError:
+            self.log("CustomTkinter 不可用，无法创建标签页", "warning")
+            return None
+
+        from ui.constants import COLORS, FONT_FAMILY
+
+        container = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+        self._build_stats_ui(container, COLORS, FONT_FAMILY, ctk)
+        return container
+
+    def _build_stats_ui(self, container, COLORS, FONT_FAMILY, ctk):
+        """构建统计数据 UI"""
+        stats = self._load_stats()
+
+        # ── 顶部概览 ──
+        overview = ctk.CTkFrame(container, fg_color=COLORS["card_bg"], corner_radius=10)
+        overview.pack(fill=ctk.X, padx=4, pady=(6, 12))
+
+        inner = ctk.CTkFrame(overview, fg_color="transparent")
+        inner.pack(fill=ctk.X, padx=16, pady=(14, 14))
+
+        total_seconds = sum(v.get("total_seconds", 0) for v in stats.values())
+        total_sessions = sum(v.get("session_count", 0) for v in stats.values())
+        version_count = len(stats)
+
+        ctk.CTkLabel(
+            inner,
+            text=self._format_duration(total_seconds),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=30, weight="bold"),
+            text_color=COLORS["accent"],
+        ).pack(anchor=ctk.W)
+
+        ctk.CTkLabel(
+            inner,
+            text=f"共 {total_sessions} 次游戏 · {version_count} 个版本",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=12),
+            text_color=COLORS["text_secondary"],
+        ).pack(anchor=ctk.W, pady=(2, 0))
+
+        if not stats:
+            empty = ctk.CTkLabel(
+                container,
+                text="暂无游戏记录\n启动一次 Minecraft 后数据将在此显示",
+                font=ctk.CTkFont(family=FONT_FAMILY, size=13),
+                text_color=COLORS["text_secondary"],
+            )
+            empty.pack(pady=40)
+            return
+
+        # ── 按版本统计 ──
+        ctk.CTkLabel(
+            container,
+            text="📦 按版本统计",
+            font=ctk.CTkFont(family=FONT_FAMILY, size=14, weight="bold"),
+            text_color=COLORS["text_primary"],
+        ).pack(anchor=ctk.W, padx=4, pady=(0, 6))
+
+        # 按总时长降序排列
+        sorted_versions = sorted(
+            stats.items(),
+            key=lambda kv: kv[1].get("total_seconds", 0),
+            reverse=True,
+        )
+
+        for version_id, info in sorted_versions:
+            self._create_version_card(
+                container, COLORS, FONT_FAMILY, ctk,
+                version_id, info,
+            )
+
+        # 底部留白
+        ctk.CTkFrame(
+            container, fg_color="transparent", height=20,
+        ).pack(fill=ctk.X)
+
+    def _create_version_card(self, container, COLORS, FONT_FAMILY, ctk, version_id, info):
+        """创建单个版本的统计卡片"""
+        total_sec = info.get("total_seconds", 0)
+        session_count = info.get("session_count", 0)
+        first_played = info.get("first_played", "")
+        last_played = info.get("last_played", "")
+        daily = info.get("daily", {})
+
+        card = ctk.CTkFrame(container, fg_color=COLORS["card_bg"], corner_radius=8)
+        card.pack(fill=ctk.X, padx=4, pady=3)
+
+        # 顶部行: 版本名称 + 总时长
+        top = ctk.CTkFrame(card, fg_color="transparent")
+        top.pack(fill=ctk.X, padx=12, pady=(10, 2))
+
+        ctk.CTkLabel(
+            top,
+            text=version_id,
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
+            text_color=COLORS["text_primary"],
+        ).pack(side=ctk.LEFT)
+
+        ctk.CTkLabel(
+            top,
+            text=self._format_duration(total_sec),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=13, weight="bold"),
+            text_color=COLORS["accent"],
+        ).pack(side=ctk.RIGHT)
+
+        # 详情行
+        detail = ctk.CTkFrame(card, fg_color="transparent")
+        detail.pack(fill=ctk.X, padx=12, pady=(0, 4))
+
+        detail_parts = [f"{session_count} 次游戏"]
+        if first_played:
+            detail_parts.append(f"首次: {first_played}")
+        if last_played:
+            detail_parts.append(f"最近: {last_played}")
+
+        ctk.CTkLabel(
+            detail,
+            text=" · ".join(detail_parts),
+            font=ctk.CTkFont(family=FONT_FAMILY, size=11),
+            text_color=COLORS["text_secondary"],
+        ).pack(anchor=ctk.W)
+
+        # ── 每日统计（最近 7 天） ──
+        if daily:
+            self._create_daily_bars(card, COLORS, FONT_FAMILY, ctk, daily, total_sec)
+
+    def _create_daily_bars(self, card, COLORS, FONT_FAMILY, ctk, daily, total_sec):
+        """创建每日时长柱状图（最近 7 天）"""
+        sorted_days = sorted(daily.items())[-7:]
+
+        bar_frame = ctk.CTkFrame(card, fg_color="transparent")
+        bar_frame.pack(fill=ctk.X, padx=12, pady=(0, 10))
+
+        max_sec = max(daily.values()) if daily else 1
+        bar_height = 60
+
+        for day_str, sec in sorted_days:
+            col = ctk.CTkFrame(bar_frame, fg_color="transparent")
+            col.pack(side=ctk.LEFT, fill=ctk.Y, padx=3)
+
+            # 柱状图
+            height = max(4, int(bar_height * sec / max_sec))
+            bar = ctk.CTkFrame(
+                col,
+                fg_color=COLORS["accent"],
+                corner_radius=3,
+                width=44,
+                height=height,
+            )
+            bar.pack(side=ctk.BOTTOM)
+
+            # 时长标签
+            label_text = self._format_duration_short(sec)
+            ctk.CTkLabel(
+                col,
+                text=label_text,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=9),
+                text_color=COLORS["text_secondary"],
+            ).pack(side=ctk.BOTTOM)
+
+            # 日期标签（MM-DD）
+            day_label = day_str[5:]  # 去掉 "YYYY-"
+            ctk.CTkLabel(
+                col,
+                text=day_label,
+                font=ctk.CTkFont(family=FONT_FAMILY, size=9),
+                text_color=COLORS["text_secondary"],
+            ).pack(side=ctk.BOTTOM, pady=(2, 0))
