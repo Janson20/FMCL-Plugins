@@ -1,7 +1,7 @@
 {
   "id": "com.fmcl.playtime-tracker",
   "name": "游戏时长统计",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "FMCL Team",
   "min_fmcl_version": "2.10.4",
   "description": {

@@ -22,6 +22,7 @@ class PlaytimeTrackerPlugin(PluginBase):
         self._current_version: Optional[str] = None
         self._start_time: Optional[float] = None
         self._stats_file = None  # 在注入后设置
+        self._tab_container = None  # 标签页容器引用
 
     def on_load(self) -> None:
         self.log("游戏时长统计插件已加载")
@@ -85,6 +86,9 @@ class PlaytimeTrackerPlugin(PluginBase):
                 f"本次游戏 {self._format_duration(duration)}",
                 "info",
             )
+
+        # 刷新标签页 UI
+        self._refresh_tab_ui()
 
         self._current_version = None
         self._start_time = None
@@ -212,8 +216,25 @@ class PlaytimeTrackerPlugin(PluginBase):
         from ui.constants import COLORS, FONT_FAMILY
 
         container = ctk.CTkScrollableFrame(parent, fg_color="transparent")
+        self._tab_container = container  # 保存引用以便后续刷新
         self._build_stats_ui(container, COLORS, FONT_FAMILY, ctk)
         return container
+
+    def _refresh_tab_ui(self):
+        """刷新标签页 UI（主线程安全）"""
+        container = self._tab_container
+        if container is None or not container.winfo_exists():
+            return
+        # 清除旧内容
+        for w in container.winfo_children():
+            w.destroy()
+        # 重建
+        try:
+            import customtkinter as ctk
+        except ImportError:
+            return
+        from ui.constants import COLORS, FONT_FAMILY
+        self._build_stats_ui(container, COLORS, FONT_FAMILY, ctk)
 
     def _build_stats_ui(self, container, COLORS, FONT_FAMILY, ctk):
         """构建统计数据 UI"""
